@@ -2,41 +2,68 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* ReferPay.org Design System - Futuristic Professional Theme */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Core Theme Colors */
+    --background: 222 47% 4%;
+    --foreground: 210 40% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    /* Electric Blue Accents */
+    --primary: 195 100% 50%;
+    --primary-foreground: 222 47% 4%;
+    --primary-glow: 195 100% 65%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    /* Warm Orange Accents */
+    --accent: 30 100% 55%;
+    --accent-foreground: 222 47% 4%;
+    --accent-glow: 30 100% 70%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Gold Tones */
+    --gold: 45 100% 65%;
+    --gold-foreground: 222 47% 4%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Dark Theme Base */
+    --card: 222 47% 6%;
+    --card-foreground: 210 40% 98%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --popover: 222 47% 6%;
+    --popover-foreground: 210 40% 98%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --secondary: 220 40% 12%;
+    --secondary-foreground: 210 40% 98%;
 
-    --destructive: 0 84.2% 60.2%;
+    --muted: 220 40% 10%;
+    --muted-foreground: 215 20% 65%;
+
+    --destructive: 0 62% 50%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 220 40% 15%;
+    --input: 220 40% 12%;
+    --ring: 195 100% 50%;
 
-    --radius: 0.5rem;
+    /* Custom Design Tokens */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--accent-glow)));
+    --gradient-gold: linear-gradient(135deg, hsl(var(--gold)), hsl(45 100% 75%));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(220 47% 6%) 50%, hsl(var(--background)) 100%);
+    
+    /* Glow Effects */
+    --glow-primary: 0 0 20px hsl(var(--primary) / 0.3);
+    --glow-accent: 0 0 20px hsl(var(--accent) / 0.3);
+    --glow-gold: 0 0 20px hsl(var(--gold) / 0.3);
+    
+    /* Shadows */
+    --shadow-elegant: 0 10px 30px -10px hsl(var(--primary) / 0.2);
+    --shadow-card: 0 8px 32px hsl(220 40% 2% / 0.8);
+    
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-glow: box-shadow 0.3s ease, transform 0.3s ease;
+
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
 
@@ -101,5 +128,137 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary) / 0.7);
+  }
+}
+
+@layer components {
+  /* Glow Button Variants */
+  .btn-glow-primary {
+    @apply bg-gradient-to-r from-primary to-primary-glow text-primary-foreground;
+    box-shadow: var(--glow-primary);
+    transition: var(--transition-glow);
+  }
+  
+  .btn-glow-primary:hover {
+    @apply scale-105;
+    box-shadow: var(--glow-primary), 0 0 40px hsl(var(--primary) / 0.4);
+  }
+  
+  .btn-glow-accent {
+    @apply bg-gradient-to-r from-accent to-accent-glow text-accent-foreground;
+    box-shadow: var(--glow-accent);
+    transition: var(--transition-glow);
+  }
+  
+  .btn-glow-accent:hover {
+    @apply scale-105;
+    box-shadow: var(--glow-accent), 0 0 40px hsl(var(--accent) / 0.4);
+  }
+  
+  .btn-glow-gold {
+    @apply bg-gradient-to-r from-gold to-yellow-400 text-gold-foreground;
+    box-shadow: var(--glow-gold);
+    transition: var(--transition-glow);
+  }
+  
+  .btn-glow-gold:hover {
+    @apply scale-105;
+    box-shadow: var(--glow-gold), 0 0 40px hsl(var(--gold) / 0.4);
+  }
+  
+  /* Card with Glow */
+  .card-glow {
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    box-shadow: var(--shadow-card);
+    transition: var(--transition-smooth);
+  }
+  
+  .card-glow:hover {
+    border-color: hsl(var(--primary) / 0.5);
+    box-shadow: var(--shadow-card), var(--glow-primary);
+  }
+  
+  /* Text Gradients */
+  .text-gradient-primary {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .text-gradient-accent {
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .text-gradient-gold {
+    background: var(--gradient-gold);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  /* Hero Background */
+  .hero-bg {
+    background: var(--gradient-hero);
+    position: relative;
+  }
+  
+  .hero-bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 30% 50%, hsl(var(--primary) / 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 70% 30%, hsl(var(--accent) / 0.1) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  
+  /* Floating Animation */
+  .float-animation {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  /* Pulse Glow */
+  .pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+  
+  @keyframes pulse-glow {
+    0%, 100% { 
+      box-shadow: var(--glow-primary);
+    }
+    50% { 
+      box-shadow: var(--glow-primary), 0 0 40px hsl(var(--primary) / 0.6);
+    }
   }
 }
