@@ -28,6 +28,25 @@ export const CONTRACT_ABI = [
     "inputs": [
       {
         "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      }
+    ],
+    "name": "balanceOf",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "_referrer",
         "type": "address"
       }
@@ -64,6 +83,51 @@ export const CONTRACT_ABI = [
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "totalSupply",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "paused",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "tokenURI",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -73,6 +137,35 @@ export const CONTRACT_ABI = [
     ],
     "name": "walletMints",
     "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "salePrice",
+        "type": "uint256"
+      }
+    ],
+    "name": "royaltyInfo",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
       {
         "internalType": "uint256",
         "name": "",
@@ -186,6 +279,84 @@ export const checkMintStatus = async (userAddress: string): Promise<number> => {
   
   const mintCount = await contract.walletMints(userAddress);
   return Number(mintCount);
+};
+
+export const getContractInfo = async () => {
+  const provider = getProvider();
+  const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
+  
+  try {
+    const [maxSupply, totalSupply, mintPrice, isPaused] = await Promise.all([
+      contract.MAX_SUPPLY(),
+      contract.totalSupply(),
+      contract.MINT_PRICE(),
+      contract.paused()
+    ]);
+    
+    return {
+      maxSupply: Number(maxSupply),
+      totalSupply: Number(totalSupply),
+      remainingSupply: Number(maxSupply) - Number(totalSupply),
+      mintPrice: Number(mintPrice),
+      isPaused: Boolean(isPaused)
+    };
+  } catch (error) {
+    console.error('Error fetching contract info:', error);
+    return {
+      maxSupply: 100000,
+      totalSupply: 0,
+      remainingSupply: 100000,
+      mintPrice: 5000000,
+      isPaused: false
+    };
+  }
+};
+
+export const getUserNFTBalance = async (userAddress: string): Promise<number> => {
+  try {
+    const provider = getProvider();
+    const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
+    
+    const balance = await contract.balanceOf(userAddress);
+    return Number(balance);
+  } catch (error) {
+    console.error('Error fetching NFT balance:', error);
+    return 0;
+  }
+};
+
+export const getTokenURI = async (tokenId: number): Promise<string> => {
+  try {
+    const provider = getProvider();
+    const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
+    
+    const uri = await contract.tokenURI(tokenId);
+    return uri;
+  } catch (error) {
+    console.error('Error fetching token URI:', error);
+    return '';
+  }
+};
+
+export const getRoyaltyInfo = async (tokenId: number, salePrice: number) => {
+  try {
+    const provider = getProvider();
+    const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
+    
+    const [receiver, royaltyAmount] = await contract.royaltyInfo(tokenId, salePrice);
+    return {
+      receiver,
+      royaltyAmount: Number(royaltyAmount),
+      royaltyPercent: (Number(royaltyAmount) / salePrice) * 100
+    };
+  } catch (error) {
+    console.error('Error fetching royalty info:', error);
+    return {
+      receiver: '',
+      royaltyAmount: 0,
+      royaltyPercent: 0
+    };
+  }
 };
 
 export const generateReferralLink = (userAddress: string): string => {

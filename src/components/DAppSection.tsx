@@ -12,6 +12,8 @@ import {
   checkMintStatus,
   generateReferralLink,
   getReferrerFromURL,
+  getContractInfo,
+  getUserNFTBalance,
   MINT_PRICE
 } from "@/lib/web3";
 
@@ -22,6 +24,15 @@ const DAppSection = () => {
   const [hasMinted, setHasMinted] = useState(false);
   const [referralLink, setReferralLink] = useState<string>("");
   const [step, setStep] = useState<'connect' | 'mint' | 'success'>('connect');
+  const [contractInfo, setContractInfo] = useState({
+    maxSupply: 100000,
+    totalSupply: 0,
+    remainingSupply: 100000,
+    mintPrice: 5000000,
+    isPaused: false
+  });
+  const [userNFTBalance, setUserNFTBalance] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -33,9 +44,30 @@ const DAppSection = () => {
   }, []);
 
   useEffect(() => {
-    // Check if user already minted
+    // Load contract info on component mount
+    const loadContractInfo = async () => {
+      setIsLoading(true);
+      try {
+        const info = await getContractInfo();
+        setContractInfo(info);
+      } catch (error) {
+        console.error('Failed to load contract info:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    loadContractInfo();
+  }, []);
+
+  useEffect(() => {
+    // Check if user already minted and get their NFT balance
     if (connectedWallet) {
-      checkMintStatus(connectedWallet).then(mintCount => {
+      Promise.all([
+        checkMintStatus(connectedWallet),
+        getUserNFTBalance(connectedWallet)
+      ]).then(([mintCount, nftBalance]) => {
+        setUserNFTBalance(nftBalance);
         if (mintCount > 0) {
           setHasMinted(true);
           setStep('success');
@@ -69,6 +101,26 @@ const DAppSection = () => {
   const handleMint = async () => {
     if (!connectedWallet) return;
     
+    // Check if contract is paused
+    if (contractInfo.isPaused) {
+      toast({
+        title: "Minting Paused",
+        description: "Contract is currently paused. Please try again later.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Check if sold out
+    if (contractInfo.remainingSupply <= 0) {
+      toast({
+        title: "Sold Out",
+        description: "All founding deeds have been minted!",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     // Use zero address if no referrer provided
     const referrer = referrerAddress || "0x0000000000000000000000000000000000000000";
     
@@ -91,7 +143,14 @@ const DAppSection = () => {
       
       await mintNFT(referrer);
       
-      // Success
+      // Success - refresh contract info and user balance
+      const [newContractInfo, newNFTBalance] = await Promise.all([
+        getContractInfo(),
+        getUserNFTBalance(connectedWallet)
+      ]);
+      
+      setContractInfo(newContractInfo);
+      setUserNFTBalance(newNFTBalance);
       setHasMinted(true);
       setStep('success');
       const newReferralLink = generateReferralLink(connectedWallet);
@@ -104,9 +163,25 @@ const DAppSection = () => {
       
     } catch (error: any) {
       console.error('Minting failed:', error);
+      
+      // Enhanced error handling
+      let errorMessage = "Transaction failed. Please try again.";
+      
+      if (error.message?.includes("paused")) {
+        errorMessage = "Contract is currently paused.";
+      } else if (error.message?.includes("insufficient")) {
+        errorMessage = "Insufficient USDT balance.";
+      } else if (error.message?.includes("allowance")) {
+        errorMessage = "USDT allowance not sufficient.";
+      } else if (error.message?.includes("already minted")) {
+        errorMessage = "You have already minted your founding deed.";
+      } else if (error.message?.includes("sold out")) {
+        errorMessage = "All founding deeds have been sold out.";
+      }
+      
       toast({
         title: "Minting Failed",
-        description: error.message || "Transaction failed. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -131,6 +206,34 @@ const DAppSection = () => {
             <br />
             <span className="text-gradient-gold">Among the 100,000 Partners</span>
           </h2>
+          
+          {/* Real-time Contract Info */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 max-w-2xl mx-auto">
+            <div className="bg-card/50 p-4 rounded-lg border">
+              <div className="text-2xl font-bold text-primary">
+                {isLoading ? "..." : contractInfo.totalSupply.toLocaleString()}
+              </div>
+              <div className="text-sm text-muted-foreground">Total Minted</div>
+            </div>
+            <div className="bg-card/50 p-4 rounded-lg border">
+              <div className="text-2xl font-bold text-gradient-gold">
+                {isLoading ? "..." : contractInfo.remainingSupply.toLocaleString()}
+              </div>
+              <div className="text-sm text-muted-foreground">Remaining</div>
+            </div>
+            <div className="bg-card/50 p-4 rounded-lg border">
+              <div className="text-2xl font-bold text-green-500">
+                {isLoading ? "..." : (contractInfo.mintPrice / 1000000).toFixed(1)} USDT
+              </div>
+              <div className="text-sm text-muted-foreground">Mint Price</div>
+            </div>
+          </div>
+          
+          {contractInfo.isPaused && (
+            <div className="mt-4 p-3 bg-destructive/10 border border-destructive/20 rounded-lg text-destructive text-sm">
+              ⚠️ Minting is currently paused
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -203,16 +306,24 @@ const DAppSection = () => {
                       />
                     </div>
 
-                    <div className="bg-card/50 p-4 rounded-lg">
+                    <div className="bg-card/50 p-4 rounded-lg space-y-2">
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-muted-foreground">Investment Amount:</span>
-                        <span className="font-bold text-primary">5 USDT</span>
+                        <span className="font-bold text-primary">
+                          {(contractInfo.mintPrice / 1000000).toFixed(1)} USDT
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-muted-foreground">Remaining Supply:</span>
+                        <span className="font-bold text-gradient-gold">
+                          {contractInfo.remainingSupply.toLocaleString()}
+                        </span>
                       </div>
                     </div>
 
                     <Button 
                       onClick={handleMint}
-                      disabled={isProcessing}
+                      disabled={isProcessing || contractInfo.isPaused || contractInfo.remainingSupply <= 0}
                       className="btn-glow-gold w-full text-lg py-6"
                     >
                       {isProcessing ? (
@@ -220,10 +331,14 @@ const DAppSection = () => {
                           <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                           Processing...
                         </>
+                      ) : contractInfo.isPaused ? (
+                        "Minting Paused"
+                      ) : contractInfo.remainingSupply <= 0 ? (
+                        "Sold Out"
                       ) : (
                         <>
                           <CheckCircle2 className="mr-2 h-5 w-5" />
-                          Confirm Contribution & Claim Deed (5 USDT)
+                          Confirm Contribution & Claim Deed ({(contractInfo.mintPrice / 1000000).toFixed(1)} USDT)
                         </>
                       )}
                     </Button>
@@ -241,6 +356,15 @@ const DAppSection = () => {
                     <p className="text-muted-foreground">
                       Your founding deed has been successfully minted!
                     </p>
+                    
+                    {userNFTBalance > 0 && (
+                      <div className="bg-card/50 p-3 rounded-lg">
+                        <div className="text-sm text-muted-foreground">Your NFTs:</div>
+                        <div className="text-lg font-bold text-gradient-gold">
+                          {userNFTBalance} Founding Deed{userNFTBalance !== 1 ? 's' : ''}
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   <div className="bg-card/50 p-4 rounded-lg">
