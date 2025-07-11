@@ -4,10 +4,9 @@ import {
   connectWallet,
   checkMintStatus,
   generateReferralLink,
-  getReferrerFromURL,
-  getContractInfo,
-  getUserNFTBalance
+  getReferrerFromURL
 } from "@/lib/web3";
+import { useContractData, useUserNFTData } from "./useContractData";
 
 export const useWeb3State = () => {
   const [connectedWallet, setConnectedWallet] = useState<string>("");
@@ -16,33 +15,13 @@ export const useWeb3State = () => {
   const [hasMinted, setHasMinted] = useState(false);
   const [referralLink, setReferralLink] = useState<string>("");
   const [step, setStep] = useState<'connect' | 'mint' | 'success'>('connect');
-  const [contractInfo, setContractInfo] = useState({
-    maxSupply: 100000,
-    totalSupply: 0,
-    remainingSupply: 100000,
-    mintPrice: 5000000,
-    isPaused: false
-  });
-  const [userNFTBalance, setUserNFTBalance] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  
+  // Use separated hooks for better performance and caching
+  const { contractInfo, isLoading, refreshContractInfo } = useContractData();
+  const { nftBalance: userNFTBalance, refreshUserData } = useUserNFTData(connectedWallet);
 
-  // Load contract info on component mount
-  useEffect(() => {
-    const loadContractInfo = async () => {
-      setIsLoading(true);
-      try {
-        const info = await getContractInfo();
-        setContractInfo(info);
-      } catch (error) {
-        console.error('Failed to load contract info:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
-    loadContractInfo();
-  }, []);
+  // Contract info is now handled by useContractData hook
 
   // Check referrer from URL
   useEffect(() => {
@@ -52,14 +31,10 @@ export const useWeb3State = () => {
     }
   }, []);
 
-  // Check if user already minted and get their NFT balance
+  // Check if user already minted
   useEffect(() => {
     if (connectedWallet) {
-      Promise.all([
-        checkMintStatus(connectedWallet),
-        getUserNFTBalance(connectedWallet)
-      ]).then(([mintCount, nftBalance]) => {
-        setUserNFTBalance(nftBalance);
+      checkMintStatus(connectedWallet).then((mintCount) => {
         if (mintCount > 0) {
           setHasMinted(true);
           setStep('success');
@@ -90,20 +65,11 @@ export const useWeb3State = () => {
     }
   };
 
-  const refreshContractInfo = async () => {
-    try {
-      const [newContractInfo, newNFTBalance] = await Promise.all([
-        getContractInfo(),
-        connectedWallet ? getUserNFTBalance(connectedWallet) : Promise.resolve(0)
-      ]);
-      
-      setContractInfo(newContractInfo);
-      if (connectedWallet) {
-        setUserNFTBalance(newNFTBalance);
-      }
-    } catch (error) {
-      console.error('Failed to refresh contract info:', error);
-    }
+  const refreshAllData = async () => {
+    await Promise.all([
+      refreshContractInfo(),
+      connectedWallet ? refreshUserData() : Promise.resolve()
+    ]);
   };
 
   return {
@@ -126,6 +92,7 @@ export const useWeb3State = () => {
     // Actions
     handleConnectWallet,
     refreshContractInfo,
+    refreshAllData,
     toast
   };
 };

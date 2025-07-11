@@ -25,6 +25,7 @@ const DAppSection = () => {
     isLoading,
     handleConnectWallet,
     refreshContractInfo,
+    refreshAllData,
     toast
   } = useWeb3State();
 
@@ -39,8 +40,8 @@ const DAppSection = () => {
     setReferralLink(newReferralLink);
     setIsProcessing(false);
     
-    // Refresh contract info after successful mint
-    await refreshContractInfo();
+    // Refresh all data after successful mint
+    await refreshAllData();
   };
 
   const handleMintError = () => {

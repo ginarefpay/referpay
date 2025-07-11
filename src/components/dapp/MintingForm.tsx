@@ -1,8 +1,11 @@
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CheckCircle2, Loader2 } from "lucide-react";
+import { CheckCircle2, Loader2, AlertCircle } from "lucide-react";
 import { approveUSDC, mintNFT } from "@/lib/web3";
+import { validateReferrerAddress, normalizeEthereumAddress } from "@/lib/validation";
+import { useDebounce } from "@/hooks/useDebounce";
 
 interface MintingFormProps {
   connectedWallet: string;
@@ -31,6 +34,18 @@ const MintingForm = ({
   onMintError,
   toast
 }: MintingFormProps) => {
+  const [validationError, setValidationError] = useState<string>("");
+  const debouncedReferrerAddress = useDebounce(referrerAddress, 500);
+
+  // Validate referrer address with debouncing
+  useEffect(() => {
+    if (debouncedReferrerAddress) {
+      const validation = validateReferrerAddress(debouncedReferrerAddress);
+      setValidationError(validation.error || "");
+    } else {
+      setValidationError("");
+    }
+  }, [debouncedReferrerAddress]);
   
   const handleMint = async () => {
     if (!connectedWallet) return;
@@ -55,8 +70,20 @@ const MintingForm = ({
       return;
     }
     
-    // Use zero address if no referrer provided
-    const referrer = referrerAddress || "0x0000000000000000000000000000000000000000";
+    // Validate referrer address before proceeding
+    if (referrerAddress && validationError) {
+      toast({
+        title: "Invalid Referrer Address",
+        description: validationError,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Normalize and use zero address if no referrer provided
+    const normalizedReferrer = referrerAddress 
+      ? normalizeEthereumAddress(referrerAddress)
+      : "0x0000000000000000000000000000000000000000";
     
     onMintStart();
     
@@ -75,7 +102,7 @@ const MintingForm = ({
         description: "Minting your founding deed...",
       });
       
-      await mintNFT(referrer);
+      await mintNFT(normalizedReferrer);
       
       onMintSuccess();
       
@@ -128,13 +155,23 @@ const MintingForm = ({
           <Label htmlFor="referrer" className="text-sm font-medium">
             Referrer Address (Optional)
           </Label>
-          <Input
-            id="referrer"
-            value={referrerAddress}
-            onChange={(e) => setReferrerAddress(e.target.value)}
-            placeholder="0x... (Leave empty if none)"
-            className="mt-2"
-          />
+          <div className="relative">
+            <Input
+              id="referrer"
+              value={referrerAddress}
+              onChange={(e) => setReferrerAddress(e.target.value)}
+              placeholder="0x... (Leave empty if none)"
+              className={`mt-2 ${validationError ? 'border-destructive' : ''}`}
+            />
+            {validationError && (
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 mt-1">
+                <AlertCircle className="h-4 w-4 text-destructive" />
+              </div>
+            )}
+          </div>
+          {validationError && (
+            <p className="text-sm text-destructive mt-1">{validationError}</p>
+          )}
         </div>
 
         <div className="bg-card/50 p-4 rounded-lg space-y-2">
@@ -154,7 +191,7 @@ const MintingForm = ({
 
         <Button 
           onClick={handleMint}
-          disabled={isProcessing || contractInfo.isPaused || contractInfo.remainingSupply <= 0}
+          disabled={isProcessing || contractInfo.isPaused || contractInfo.remainingSupply <= 0 || !!validationError}
           className="btn-glow-gold w-full text-lg py-6"
         >
           {isProcessing ? (
