@@ -2,8 +2,8 @@ import { ethers } from 'ethers';
 
 // Contract Configuration
 export const CONTRACT_ADDRESS = '0xbDa66426438FEFC0509c08a34F693d69474916Ab';
-export const USDT_CONTRACT_ADDRESS = '0xdAC17F958D2ee523a2206206994597C13D831ec7'; // Ethereum Mainnet USDT
-export const MINT_PRICE = '5000000'; // 5 USDT (6 decimals)
+export const USDC_CONTRACT_ADDRESS = '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238'; // Sepolia Testnet USDC
+export const MINT_PRICE = '5000000'; // 5 USDC (6 decimals)
 
 export const CONTRACT_ABI = [
   {
@@ -177,7 +177,7 @@ export const CONTRACT_ABI = [
   }
 ];
 
-export const USDT_ABI = [
+export const USDC_ABI = [
   {
     "inputs": [
       {
@@ -253,12 +253,12 @@ export const getProvider = () => {
   throw new Error('No ethereum provider found');
 };
 
-export const approveUSDT = async (userAddress: string) => {
+export const approveUSDC = async (userAddress: string) => {
   const provider = getProvider();
   const signer = await provider.getSigner();
-  const usdtContract = new ethers.Contract(USDT_CONTRACT_ADDRESS, USDT_ABI, signer);
+  const usdcContract = new ethers.Contract(USDC_CONTRACT_ADDRESS, USDC_ABI, signer);
   
-  const tx = await usdtContract.approve(CONTRACT_ADDRESS, MINT_PRICE);
+  const tx = await usdcContract.approve(CONTRACT_ADDRESS, MINT_PRICE);
   await tx.wait();
   return tx;
 };

@@ -27,7 +27,7 @@ const ContractStats = ({ contractInfo, isLoading }: ContractStatsProps) => {
         </div>
         <div className="bg-card/50 p-4 rounded-lg border">
           <div className="text-2xl font-bold text-green-500">
-            {isLoading ? "..." : (contractInfo.mintPrice / 1000000).toFixed(1)} USDT
+            {isLoading ? "..." : (contractInfo.mintPrice / 1000000).toFixed(1)} USDC
           </div>
           <div className="text-sm text-muted-foreground">Mint Price</div>
         </div>

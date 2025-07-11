@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CheckCircle2, Loader2 } from "lucide-react";
-import { approveUSDT, mintNFT } from "@/lib/web3";
+import { approveUSDC, mintNFT } from "@/lib/web3";
 
 interface MintingFormProps {
   connectedWallet: string;
@@ -61,13 +61,13 @@ const MintingForm = ({
     onMintStart();
     
     try {
-      // Step 1: Approve USDT
+      // Step 1: Approve USDC
       toast({
         title: "Step 1/2",
-        description: "Approving USDT payment...",
+        description: "Approving USDC payment...",
       });
       
-      await approveUSDT(connectedWallet);
+      await approveUSDC(connectedWallet);
       
       // Step 2: Mint NFT
       toast({
@@ -93,9 +93,9 @@ const MintingForm = ({
       if (error.message?.includes("paused")) {
         errorMessage = "Contract is currently paused.";
       } else if (error.message?.includes("insufficient")) {
-        errorMessage = "Insufficient USDT balance.";
+        errorMessage = "Insufficient USDC balance.";
       } else if (error.message?.includes("allowance")) {
-        errorMessage = "USDT allowance not sufficient.";
+        errorMessage = "USDC allowance not sufficient.";
       } else if (error.message?.includes("already minted")) {
         errorMessage = "You have already minted your founding deed.";
       } else if (error.message?.includes("sold out")) {
@@ -141,7 +141,7 @@ const MintingForm = ({
           <div className="flex justify-between items-center">
             <span className="text-sm text-muted-foreground">Investment Amount:</span>
             <span className="font-bold text-primary">
-              {(contractInfo.mintPrice / 1000000).toFixed(1)} USDT
+              {(contractInfo.mintPrice / 1000000).toFixed(1)} USDC
             </span>
           </div>
           <div className="flex justify-between items-center">
@@ -169,7 +169,7 @@ const MintingForm = ({
           ) : (
             <>
               <CheckCircle2 className="mr-2 h-5 w-5" />
-              Confirm Contribution & Claim Deed ({(contractInfo.mintPrice / 1000000).toFixed(1)} USDT)
+              Confirm Contribution & Claim Deed ({(contractInfo.mintPrice / 1000000).toFixed(1)} USDC)
             </>
           )}
         </Button>
