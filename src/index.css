@@ -261,4 +261,51 @@
       box-shadow: var(--glow-primary), 0 0 40px hsl(var(--primary) / 0.6);
     }
   }
+
+  /* Smooth scroll behavior */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Enhanced responsive design utilities */
+  .container {
+    @apply w-full mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Mobile optimizations */
+  @media (max-width: 768px) {
+    .hero-bg {
+      min-height: calc(100vh - 4rem);
+    }
+    
+    .text-5xl.md\:text-7xl {
+      @apply text-4xl;
+    }
+    
+    .text-xl.md\:text-2xl {
+      @apply text-lg;
+    }
+  }
+
+  /* Interactive elements */
+  .hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Section transitions */
+  .section-fade {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  
+  .section-fade.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

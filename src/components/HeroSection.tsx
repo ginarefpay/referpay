@@ -7,7 +7,7 @@ interface HeroSectionProps {
 
 const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
   return (
-    <section className="hero-bg min-h-screen flex items-center justify-center relative overflow-hidden">
+    <section className="hero-bg min-h-screen flex items-center justify-center relative overflow-hidden pt-16">
       <div className="container mx-auto px-6 text-center relative z-10">
         {/* Logo */}
         <div className="mb-12 flex justify-center">
