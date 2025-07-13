@@ -24,6 +24,8 @@ const Footer = () => {
       title: "Resources",
       links: [
         { label: "Documentation", href: "#" },
+        { label: "Whitepaper", href: "#" },
+        { label: "GitHub", href: "#" },
         { label: "API", href: "#" },
         { label: "Support", href: "#" },
         { label: "FAQ", href: "#" },

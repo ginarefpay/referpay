@@ -12,10 +12,11 @@ const Header = ({ onNavigate }: HeaderProps) => {
 
   const navigationItems = [
     { label: "Home", section: "hero" },
+    { label: "Problem", section: "problem" },
+    { label: "Solution", section: "solution" },
+    { label: "Partnership", section: "fpo" },
     { label: "Vision", section: "vision" },
     { label: "About", section: "about" },
-    { label: "How It Works", section: "how-it-works" },
-    { label: "Value", section: "value" },
     { label: "DApp", section: "dapp" },
   ];
 
@@ -56,7 +57,7 @@ const Header = ({ onNavigate }: HeaderProps) => {
             onClick={() => handleNavigation("dapp")}
             className="btn-glow-primary"
           >
-            Launch DApp
+            Connect Wallet
           </Button>
         </div>
 
@@ -99,7 +100,7 @@ const Header = ({ onNavigate }: HeaderProps) => {
                   className="btn-glow-primary w-full"
                   size="lg"
                 >
-                  Launch DApp
+                  Connect Wallet
                 </Button>
               </div>
             </div>

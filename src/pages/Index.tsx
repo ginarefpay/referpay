@@ -4,6 +4,9 @@ import ValueSection from "@/components/ValueSection";
 import DAppSection from "@/components/DAppSection";
 import AboutSection from "@/components/sections/AboutSection";
 import HowItWorksSection from "@/components/sections/HowItWorksSection";
+import ProblemSection from "@/components/sections/ProblemSection";
+import SolutionSection from "@/components/sections/SolutionSection";
+import FPOSection from "@/components/sections/FPOSection";
 import Layout from "@/components/layout/Layout";
 
 const Index = () => {
@@ -26,6 +29,15 @@ const Index = () => {
     <Layout onNavigate={handleNavigation}>
       <section id="hero">
         <HeroSection onGetStarted={scrollToDApp} />
+      </section>
+      <section id="problem">
+        <ProblemSection />
+      </section>
+      <section id="solution">
+        <SolutionSection />
+      </section>
+      <section id="fpo">
+        <FPOSection />
       </section>
       <section id="vision">
         <VisionSection />
