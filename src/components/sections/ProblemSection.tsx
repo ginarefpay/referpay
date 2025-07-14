@@ -7,21 +7,21 @@ const ProblemSection = () => {
         <div className="max-w-4xl mx-auto text-center">
           {/* Main Title */}
           <h2 className="text-4xl md:text-6xl font-bold mb-8">
-            <span className="text-gradient-accent">لماذا تموت الأفكار العظيمة؟</span>
+            <span className="text-gradient-accent">Why Do Great Ideas Die?</span>
           </h2>
           
           {/* Story Content */}
           <div className="text-lg md:text-xl text-muted-foreground mb-12 leading-relaxed space-y-6">
             <p>
-              في كل يوم، يولد حلم في عقل مخترع، ولكن للأسف، 90% من هذه الأحلام تموت قبل أن ترى النور.
+              Every day, a dream is born in an inventor's mind, but sadly, 90% of these dreams die before they see the light.
             </p>
             
             <p>
-              المشكلة ليست في نقص الإبداع، بل في <span className="text-primary font-semibold">نقص التمويل والدعم</span>.
+              The problem isn't a lack of creativity, but a <span className="text-primary font-semibold">lack of funding and support</span>.
             </p>
             
             <p>
-              الآلاف من الأفكار الثورية تضيع كل عام لأن أصحابها لا يجدون الطريق الصحيح لتحويلها إلى واقع.
+              Thousands of revolutionary ideas are lost every year because their creators can't find the right path to turn them into reality.
             </p>
           </div>
 
@@ -30,19 +30,19 @@ const ProblemSection = () => {
             <div className="card-glow p-6 rounded-xl text-center">
               <AlertTriangle className="h-12 w-12 text-destructive mx-auto mb-4" />
               <h3 className="text-2xl font-bold text-gradient-accent mb-2">90%</h3>
-              <p className="text-muted-foreground">من الأفكار العظيمة تموت</p>
+              <p className="text-muted-foreground">of great ideas die</p>
             </div>
             
             <div className="card-glow p-6 rounded-xl text-center">
               <Clock className="h-12 w-12 text-primary mx-auto mb-4" />
-              <h3 className="text-2xl font-bold text-gradient-primary mb-2">5 سنوات</h3>
-              <p className="text-muted-foreground">متوسط وقت الحصول على تمويل</p>
+              <h3 className="text-2xl font-bold text-gradient-primary mb-2">5 Years</h3>
+              <p className="text-muted-foreground">average time to get funding</p>
             </div>
             
             <div className="card-glow p-6 rounded-xl text-center">
               <DollarSign className="h-12 w-12 text-gold mx-auto mb-4" />
-              <h3 className="text-2xl font-bold text-gradient-gold mb-2">مليارات</h3>
-              <p className="text-muted-foreground">الدولارات المفقودة سنوياً</p>
+              <h3 className="text-2xl font-bold text-gradient-gold mb-2">Billions</h3>
+              <p className="text-muted-foreground">of dollars lost annually</p>
             </div>
           </div>
         </div>

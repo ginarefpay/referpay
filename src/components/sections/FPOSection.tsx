@@ -10,7 +10,7 @@ const FPOSection = () => {
       icon: Crown,
       price: "0.1 ETH",
       supply: "250/1000",
-      benefits: ["حقوق تصويت", "عوائد شهرية", "وصول مبكر", "شارة خاصة"],
+      benefits: ["Voting rights", "Monthly returns", "Early access", "Special badge"],
       gradient: "from-gold to-yellow-400",
       glow: "glow-gold"
     },
@@ -20,7 +20,7 @@ const FPOSection = () => {
       icon: Zap,
       price: "0.05 ETH",
       supply: "500/2000",
-      benefits: ["عوائد ربع سنوية", "وصول المنتج", "مجتمع خاص", "NFT حصري"],
+      benefits: ["Quarterly returns", "Product access", "Private community", "Exclusive NFT"],
       gradient: "from-primary to-primary-glow",
       glow: "glow-primary"
     },
@@ -30,7 +30,7 @@ const FPOSection = () => {
       icon: Rocket,
       price: "0.025 ETH",
       supply: "1200/3000",
-      benefits: ["تحديثات منتظمة", "وصول Beta", "دعم تقني", "شهادة رقمية"],
+      benefits: ["Regular updates", "Beta access", "Technical support", "Digital certificate"],
       gradient: "from-accent to-accent-glow",
       glow: "glow-accent"
     },
@@ -40,7 +40,7 @@ const FPOSection = () => {
       icon: Gem,
       price: "0.01 ETH",
       supply: "2800/5000",
-      benefits: ["نشرة إخبارية", "وصول محدود", "مجتمع عام", "NFT تذكاري"],
+      benefits: ["Newsletter", "Limited access", "Public community", "Commemorative NFT"],
       gradient: "from-purple-500 to-pink-500",
       glow: "glow-primary"
     }
@@ -53,13 +53,13 @@ const FPOSection = () => {
           {/* Section Header */}
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-6xl font-bold mb-6">
-              <span className="text-gradient-gold">كيف تصبح شريكاً مؤسساً؟</span>
+              <span className="text-gradient-gold">How to Become a Founding Partner?</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-              اختر مستوى الشراكة الذي يناسبك واحصل على حصتك من مستقبل الابتكار
+              Choose the partnership level that suits you and get your share of the future of innovation
             </p>
             <Badge variant="outline" className="text-primary border-primary/50">
-              عرض محدود - الكمية محدودة
+              Limited Offer - Limited Quantity
             </Badge>
           </div>
 
@@ -91,7 +91,7 @@ const FPOSection = () => {
                       {tier.price}
                     </div>
                     <div className="text-sm text-muted-foreground">
-                      متبقي: {tier.supply}
+                      Remaining: {tier.supply}
                     </div>
                   </div>
 
@@ -110,7 +110,7 @@ const FPOSection = () => {
                     className={`w-full btn-${tier.glow}`}
                     size="sm"
                   >
-                    اشترِ الآن
+                    Buy Now
                   </Button>
                 </div>
               </div>
@@ -120,13 +120,13 @@ const FPOSection = () => {
           {/* Bottom CTA */}
           <div className="text-center bg-gradient-to-r from-primary/10 to-accent/10 p-8 rounded-xl">
             <h3 className="text-2xl font-bold mb-4 text-gradient-primary">
-              لا تفوت الفرصة
+              Don't Miss the Opportunity
             </h3>
             <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-              كن جزءاً من ثورة الابتكار واحصل على عوائد مدى الحياة من أفكار المستقبل
+              Be part of the innovation revolution and get lifetime returns from the ideas of the future
             </p>
             <Button size="lg" className="btn-glow-gold">
-              اكتشف المزيد عن الشراكة
+              Discover More About Partnership
             </Button>
           </div>
         </div>

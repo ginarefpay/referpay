@@ -14,13 +14,13 @@ const VisionSection = () => {
         <Card className="card-glow p-8 md:p-12 text-center">
           <div className="text-lg md:text-xl leading-relaxed space-y-6 text-muted-foreground">
             <p>
-              بمساهمتك البسيطة، أنت لا تمول مشروعاً فقط، بل{" "}
-              <span className="text-primary font-semibold">تشارك في تأسيس أول منصة لا مركزية مفتوحة المصدر</span>،
-              مملوكة بالكامل لمئة ألف شخص بنوها.
+              With your simple contribution, you're not just funding a project, but{" "}
+              <span className="text-primary font-semibold">participating in establishing the first decentralized open-source platform</span>,
+              entirely owned by one hundred thousand people who built it.
             </p>
             <p>
-              في هذا الكيان، <span className="text-gradient-accent">الفكرة ملك للجميع</span>، وصاحبها الأصلي هو{" "}
-              <span className="text-gold">شريك مثل أي شريك آخر</span>.
+              In this entity, <span className="text-gradient-accent">the idea belongs to everyone</span>, and its original creator is{" "}
+              <span className="text-gold">a partner like any other partner</span>.
             </p>
           </div>
           

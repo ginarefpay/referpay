@@ -5,20 +5,20 @@ const SolutionSection = () => {
   const steps = [
     {
       icon: FileText,
-      title: "سجّل فكرتك",
-      description: "حوّل فكرتك إلى 'أصل رقمي' فريد (NFT) يحمي حقوق الملكية الفكرية ويثبت أولويتك في الاختراع",
+      title: "Register Your Idea",
+      description: "Transform your idea into a unique 'digital asset' (NFT) that protects intellectual property rights and proves your priority in invention",
       color: "text-primary"
     },
     {
       icon: Star,
-      title: "قيّم أصلك",
-      description: "مجتمعنا المكون من الخبراء والمستثمرين يقوم بتقييم فكرتك وتحديد قيمتها الحقيقية في السوق",
+      title: "Value Your Asset",
+      description: "Our community of experts and investors evaluates your idea and determines its real market value",
       color: "text-accent"
     },
     {
       icon: Coins,
-      title: "احصل على تمويل فوري",
-      description: "يمكنك عرض حصص من فكرتك كأصول رقمية للمستثمرين والحصول على التمويل اللازم فوراً",
+      title: "Get Instant Funding",
+      description: "You can offer shares of your idea as digital assets to investors and get the necessary funding instantly",
       color: "text-gold"
     }
   ];
@@ -30,12 +30,12 @@ const SolutionSection = () => {
           {/* Main Title */}
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-6xl font-bold mb-6">
-              <span className="text-gradient-primary">الحل: ReferPay</span>
+              <span className="text-gradient-primary">The Solution: ReferPay</span>
               <br />
-              <span className="text-gradient-gold">حيث لا تموت الأفكار</span>
+              <span className="text-gradient-gold">Where Ideas Never Die</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              منصة رقمية ثورية تحول أفكارك إلى أصول قابلة للتداول والاستثمار
+              A revolutionary digital platform that transforms your ideas into tradeable and investable assets
             </p>
           </div>
 
@@ -48,7 +48,7 @@ const SolutionSection = () => {
                 </div>
                 
                 <div className="mb-4 text-sm font-bold text-primary">
-                  الخطوة {index + 1}
+                  Step {index + 1}
                 </div>
                 
                 <h3 className="text-2xl font-bold mb-4 text-gradient-primary">
@@ -68,7 +68,7 @@ const SolutionSection = () => {
               size="lg"
               className="btn-glow-accent text-lg px-12 py-6"
             >
-              ابدأ رحلتك الآن
+              Start Your Journey Now
             </Button>
           </div>
         </div>
