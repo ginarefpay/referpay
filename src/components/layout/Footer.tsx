@@ -1,13 +1,15 @@
-import { Github, Twitter, Linkedin, Mail } from "lucide-react";
+import { Github, Twitter, Linkedin, Mail, Youtube, Video, Send } from "lucide-react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   const socialLinks = [
-    { icon: Github, href: "#", label: "GitHub" },
-    { icon: Twitter, href: "#", label: "Twitter" },
-    { icon: Linkedin, href: "#", label: "LinkedIn" },
-    { icon: Mail, href: "mailto:contact@referpay.org", label: "Email" },
+    { icon: Github, href: "https://github.com/referpay", label: "GitHub" },
+    { icon: Twitter, href: "https://x.com/referpayorg", label: "Twitter" },
+    { icon: Linkedin, href: "https://linkedin.com/company/referpay", label: "LinkedIn" },
+    { icon: Youtube, href: "https://youtube.com/@referpayorg", label: "YouTube" },
+    { icon: Video, href: "https://tiktok.com/@referpayorg", label: "TikTok" },
+    { icon: Send, href: "https://t.me/referpayorg", label: "Telegram" },
   ];
 
   const footerLinks = [
@@ -25,10 +27,20 @@ const Footer = () => {
       links: [
         { label: "Documentation", href: "#" },
         { label: "Whitepaper", href: "#" },
-        { label: "GitHub", href: "#" },
+        { label: "GitHub", href: "https://github.com/referpay" },
         { label: "API", href: "#" },
-        { label: "Support", href: "#" },
+        { label: "Support", href: "mailto:support@referpay.org" },
         { label: "FAQ", href: "#" },
+      ],
+    },
+    {
+      title: "Contact",
+      links: [
+        { label: "General", href: "mailto:contact@referpay.org" },
+        { label: "Support", href: "mailto:support@referpay.org" },
+        { label: "Business", href: "mailto:business@referpay.org" },
+        { label: "Press", href: "mailto:press@referpay.org" },
+        { label: "Partnerships", href: "mailto:partnerships@referpay.org" },
       ],
     },
     {
