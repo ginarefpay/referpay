@@ -5,26 +5,26 @@ const ValueSection = () => {
   const benefits = [
     {
       icon: FileText,
-      title: "سند ملكية أبدي (NFT)",
-      description: "تحصل فوراً على سند ملكية يثبت حصتك إلى الأبد",
+      title: "Eternal Title Deed (NFT)",
+      description: "Instantly receive a title deed that proves your share forever.",
       gradient: "text-gradient-primary"
     },
     {
       icon: DollarSign,
-      title: "محرك ربح فوري",
-      description: "عن كل شخص ينضم عبرك، تحصل على 1 دولار مباشرة وفوراً في محفظتك",
+      title: "Instant Profit Engine",
+      description: "For every person who joins through you, you get $1 directly and instantly in your wallet.",
       gradient: "text-gradient-accent"
     },
     {
       icon: TrendingUp,
-      title: "حصة دائمة من الأرباح",
-      description: "تحصل على نسبة من أرباح المنصة المستقبلية مدى الحياة",
+      title: "Permanent Share of Profits",
+      description: "Receive a percentage of the platform's future profits for life.",
       gradient: "text-gradient-gold"
     },
     {
       icon: Heart,
-      title: "أثر إيجابي",
-      description: "تساهم في بناء أداة تخدم البشرية وتمنح الفرصة للمبدعين حول العالم",
+      title: "Positive Impact",
+      description: "Contribute to building a tool that serves humanity and gives opportunities to creators around the world.",
       gradient: "text-gradient-primary"
     }
   ];
