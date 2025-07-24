@@ -1,73 +1,90 @@
-# Welcome to your Lovable project
+# ReferPay.org
 
-## Project info
+![ReferPay Logo](https://www.referpay.org/lovable-uploads/633f9e66-854c-4ba9-a849-fa17dbb293ba.png)
 
-**URL**: https://lovable.dev/projects/62a49f18-52fd-4b36-af04-52d24c3420b9
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Project Status: Active](https://img.shields.io/badge/status-active-success.svg)](https://github.com/ginarefpay/referpay)
+[![Community](https://img.shields.io/badge/Join-Community-blue.svg)](https://t.me/referpayorg)
 
-## How can I edit this code?
+**ReferPay.org** is a revolutionary project to build a true decentralized network, fully owned by 100,000 founding partners, aimed at building an open digital economy for everyone.
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+## 🏛️ The Project's Constitution: The 100,000 Model
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/62a49f18-52fd-4b36-af04-52d24c3420b9) and start prompting.
+ReferPay.org is not just an application; it's a movement to build a new digital infrastructure owned by the community. Our model is based on a simple and powerful rule: **the power of numbers**.
 
-Changes made via Lovable will be committed automatically to this repo.
+* **The Goal:** To gather **100,000 founding partners**. Each partner is a cornerstone of the network.
+* **The Infrastructure:** Our goal is to run services and applications on a network of **100,000 devices (IP addresses)** belonging to the partners, creating a truly distributed network resistant to central control.
+* **Security:** The main platform treasury will be protected by a collective security system based on the **100,000 partner wallets**, providing unprecedented decentralized protection.
+* **Funding:** The project's capital is built through a simple and symbolic contribution of **$5 (USDC)** from each partner. This gathers an initial seed fund of **$500,000** to build and develop the ecosystem.
+* **Growth & Team Selection:** **$100,000** of the capital is allocated to the referral system. This system is not just for growth but is also a mechanism to test the competency of contributors. Through it, the best **100 leaders, developers, and marketers** will be selected to lead the advanced stages of the project based on their actual contributions.
 
-**Use your preferred IDE**
+## 💡 The Core Feature: The Instant Growth Engine
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+The referral system is integrated directly into the smart contract and is **instantly activated** for every new partner.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+* **How it Works:** As soon as a person contributes and becomes a partner (receives the partnership NFT), their ability to generate a unique referral link is **instantly activated**. The referral link will have the format: `Referpay.org?ref=ADDRESS`, where `ADDRESS` is the partner's wallet address.
+* **The Direct Reward:** When this partner shares their link and invites a new person who joins with the $5 contribution, the original partner receives **$1 (USDC) instantly and directly** to their wallet. This process is fully automated by the smart contract.
+* **Why it Matters:** This turns every partner, from the first moment they join, into an active contributor to the network's growth and ensures that value is distributed to community members instead of being spent on centralized advertising.
 
-Follow these steps:
+---
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## ⛓️ Contract Information (Polygon Mainnet)
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+For full transparency, these are the official project addresses on the Polygon network:
 
-# Step 3: Install the necessary dependencies.
-npm i
+* **Main Project Contract (ReferPay Contract):**
+    * `0x19C1d81A794411a85666754839B865cBFb61f724`
+    * **[View on Blockscout](https://polygon.blockscout.com/address/0x19C1d81A794411a85666754839B865cBFb61f724)**
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+* **Payment Currency (USDC):**
+    * `0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359`
+    * **[View on Blockscout](https://polygon.blockscout.com/token/0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359)**
 
-**Edit a file directly in GitHub**
+---
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## ✅ Current Status
 
-**Use GitHub Codespaces**
+The project is live and operational.
+* **Application:** The frontend is connected to the smart contract and allows users to join as partners.
+* **Operating Requirement:** For the best experience, the application should currently be used through the integrated browser in the **MetaMask** wallet.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 🛠️ Tech Stack
 
-## What technologies are used for this project?
+* **Frontend:** React, TypeScript, Vite, TailwindCSS
+* **Blockchain:** Solidity, Ethers.js
+* **Network:** Polygon Mainnet
 
-This project is built with:
+## ⚙️ Getting Started
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Excited to contribute? Follow these steps to run the project on your local machine:
 
-## How can I deploy this project?
+1.  **Clone the repo:**
+    ```sh
+    git clone [https://github.com/ginarefpay/referpay.git](https://github.com/ginarefpay/referpay.git)
+    ```
 
-Simply open [Lovable](https://lovable.dev/projects/62a49f18-52fd-4b36-af04-52d24c3420b9) and click on Share -> Publish.
+2.  **Navigate to the directory:**
+    ```sh
+    cd referpay
+    ```
 
-## Can I connect a custom domain to my Lovable project?
+3.  **Install dependencies:**
+    ```sh
+    npm install
+    ```
 
-Yes, you can!
+4.  **Run the development server:**
+    ```sh
+    npm run dev
+    ```
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## 🤝 How to Contribute
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+**This project belongs to you.** We welcome and accept all suggestions and developments from the community.
+* To contribute, please visit the **[Issues](https://github.com/ginarefpay/referpay/issues)** section to suggest ideas or claim tasks.
+
+## 📜 License
+
+This project is licensed under the **MIT License**.
