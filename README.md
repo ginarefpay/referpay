@@ -1,6 +1,6 @@
 # ReferPay.org
 
-![ReferPay Logo](https://www.referpay.org/lovable-uploads/633f9e66-854c-4ba9-a849-fa17dbb293ba.png)
+
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Project Status: Active](https://img.shields.io/badge/status-active-success.svg)](https://github.com/ginarefpay/referpay)
