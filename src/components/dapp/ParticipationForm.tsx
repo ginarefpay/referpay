@@ -5,18 +5,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle2, Loader2, AlertCircle, Users } from "lucide-react";
-import { validateReferrerAddress, normalizeEthereumAddress } from "@/lib/validation";
+import { validateReferrerAddress } from "@/lib/validation";
 import { useDebounce } from "@/hooks/useDebounce";
+import { LiveContractInfo } from "@/lib/web3/live-contract-data";
 
 interface ParticipationFormProps {
   connectedWallet: string;
   referrerAddress: string;
   setReferrerAddress: (address: string) => void;
-  contractInfo: {
-    mintPrice: number;
-    remainingSupply: number;
-    isPaused: boolean;
-  };
+  contractInfo: LiveContractInfo;
   isProcessing: boolean;
   onParticipate: () => void;
 }
@@ -56,22 +53,28 @@ const ParticipationForm = ({
           Join ReferPay Partners
         </h3>
         <p className="text-muted-foreground mb-4">
-          Become one of the 100,000 founding partners and start earning immediately
+          Become one of 100,000 founding partners and start earning immediately
         </p>
         <div className="text-sm text-muted-foreground">
           Connected: {connectedWallet.slice(0, 6)}...{connectedWallet.slice(-4)}
         </div>
       </div>
 
-      {/* Participation Details */}
+      {/* Live Progress */}
       <Card className="bg-gradient-to-r from-primary/5 to-secondary/5">
         <CardHeader>
-          <CardTitle className="text-lg">Partnership Investment</CardTitle>
+          <CardTitle className="text-lg">Live Partnership Progress</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">Investment Amount:</span>
+            <span className="text-sm text-muted-foreground">Partners Joined:</span>
             <span className="font-bold text-primary text-lg">
+              {contractInfo.totalSupply.toLocaleString()}
+            </span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-muted-foreground">Investment Amount:</span>
+            <span className="font-bold text-gradient-gold">
               {(contractInfo.mintPrice / 1000000).toFixed(1)} USDC
             </span>
           </div>
@@ -80,11 +83,6 @@ const ParticipationForm = ({
             <span className="font-bold text-gradient-gold">
               {contractInfo.remainingSupply.toLocaleString()}
             </span>
-          </div>
-          <div className="pt-2 border-t">
-            <p className="text-xs text-muted-foreground">
-              Your investment reserves your founding partnership position and activates your referral earning system.
-            </p>
           </div>
         </CardContent>
       </Card>
@@ -129,15 +127,15 @@ const ParticipationForm = ({
             </li>
             <li className="flex items-center gap-2">
               <CheckCircle2 className="h-4 w-4 text-green-500" />
-              Active Referral Link ($1 per referral)
+              Active Referral Link ($1 USDC per referral)
             </li>
             <li className="flex items-center gap-2">
               <CheckCircle2 className="h-4 w-4 text-green-500" />
-              Real-time Earnings Dashboard
+              Live Blockchain Data Dashboard
             </li>
             <li className="flex items-center gap-2">
               <CheckCircle2 className="h-4 w-4 text-green-500" />
-              Exclusive Partner Benefits
+              Real-time Earnings Tracking
             </li>
           </ul>
         </CardContent>
@@ -152,7 +150,7 @@ const ParticipationForm = ({
         {isProcessing ? (
           <>
             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-            Processing...
+            Processing on Polygon...
           </>
         ) : contractInfo.isPaused ? (
           "Participation Paused"
@@ -171,6 +169,10 @@ const ParticipationForm = ({
           Participation is temporarily paused. Please check back later.
         </p>
       )}
+      
+      <div className="text-center text-xs text-muted-foreground">
+        All data is live from Polygon blockchain • Updates automatically
+      </div>
     </div>
   );
 };
