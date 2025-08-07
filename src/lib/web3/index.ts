@@ -11,3 +11,11 @@ export * from './errors';
 export * from './retry';
 export * from './transaction';
 export * from './partner-utils';
+
+// Network functionality
+export * from './network';
+
+// Live data functionality
+export * from './live-contract-data';
+export * from './wallet-balances';
+export * from './referral-analyzer';

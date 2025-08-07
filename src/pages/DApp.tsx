@@ -1,10 +1,10 @@
 
-import SmartDAppSection from "@/components/dapp/SmartDAppSection";
+import UnifiedDashboard from "@/components/dapp/UnifiedDashboard";
 
 const DApp = () => {
   return (
-    <div className="min-h-screen pt-16">
-      <SmartDAppSection />
+    <div className="min-h-screen pt-16 bg-gradient-to-br from-background via-card/50 to-background">
+      <UnifiedDashboard />
     </div>
   );
 };

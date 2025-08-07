@@ -15,6 +15,7 @@ import {
   checkUSDCAllowance
 } from '@/lib/web3/enhanced-contracts';
 import { getErrorMessage } from '@/lib/web3/errors';
+import { promptNetworkSwitch } from '@/lib/web3/network';
 
 export type UserState = 'disconnected' | 'checking' | 'new_user' | 'partner';
 
@@ -139,10 +140,13 @@ export const useLiveBlockchainData = () => {
     }
   }, [toast]);
 
-  // Connect wallet
+  // Connect wallet with network check
   const handleConnectWallet = useCallback(async () => {
     setState(prev => ({ ...prev, isConnecting: true }));
     try {
+      // First ensure we're on Polygon network
+      await promptNetworkSwitch();
+      
       const address = await connectWallet();
       if (address) {
         setState(prev => ({ 
@@ -157,7 +161,7 @@ export const useLiveBlockchainData = () => {
         
         toast({
           title: "Wallet Connected",
-          description: `Connected to ${address.slice(0, 6)}...${address.slice(-4)}`,
+          description: `Connected to ${address.slice(0, 6)}...${address.slice(-4)} on Polygon network`,
         });
       }
     } catch (error) {
@@ -170,13 +174,16 @@ export const useLiveBlockchainData = () => {
     }
   }, [loadUserData, toast]);
 
-  // Handle participation (minting)
+  // Handle participation (minting) with network check
   const handleParticipate = useCallback(async () => {
     if (!state.connectedWallet || state.userState !== 'new_user') return;
 
     setState(prev => ({ ...prev, isProcessing: true }));
     
     try {
+      // Ensure we're on Polygon network before proceeding
+      await promptNetworkSwitch();
+      
       // Check USDC allowance
       const allowance = await checkUSDCAllowance(state.connectedWallet);
       
