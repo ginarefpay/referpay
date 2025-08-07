@@ -1,6 +1,6 @@
 
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 // Import all sections
 import HeroSection from "@/components/HeroSection";
@@ -13,6 +13,7 @@ import DAppSection from "@/components/DAppSection";
 
 const Index = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Legacy scroll-to-section functionality for existing bookmarks/links
   useEffect(() => {
@@ -25,9 +26,13 @@ const Index = () => {
     }
   }, [location]);
 
+  const handleGetStarted = () => {
+    navigate("/partnership");
+  };
+
   return (
     <div className="min-h-screen">
-      <HeroSection />
+      <HeroSection onGetStarted={handleGetStarted} />
       <ProblemSection />
       <SolutionSection />
       <FPOSection />
