@@ -1,4 +1,6 @@
+
 import { Github, Twitter, Linkedin, Mail, Youtube, Video, Send } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -19,14 +21,14 @@ const Footer = () => {
         { label: "How it Works", href: "#vision" },
         { label: "Features", href: "#value" },
         { label: "DApp", href: "#dapp" },
-        { label: "Roadmap", href: "#" },
+        { label: "Dashboard", href: "/dashboard" },
       ],
     },
     {
       title: "Resources",
       links: [
+        { label: "Whitepaper", href: "/whitepaper" },
         { label: "Documentation", href: "#" },
-        { label: "Whitepaper", href: "#" },
         { label: "GitHub", href: "https://github.com/referpay" },
         { label: "API", href: "#" },
         { label: "Support", href: "mailto:support@referpay.org" },
@@ -46,8 +48,8 @@ const Footer = () => {
     {
       title: "Legal",
       links: [
-        { label: "Privacy Policy", href: "#" },
-        { label: "Terms of Service", href: "#" },
+        { label: "Privacy Policy", href: "/privacy" },
+        { label: "Terms of Service", href: "/terms" },
         { label: "Cookie Policy", href: "#" },
         { label: "Compliance", href: "#" },
       ],
@@ -97,12 +99,37 @@ const Footer = () => {
               <ul className="space-y-3">
                 {section.links.map((link) => (
                   <li key={link.label}>
-                    <a 
-                      href={link.href}
-                      className="text-muted-foreground hover:text-primary transition-colors duration-300"
-                    >
-                      {link.label}
-                    </a>
+                    {link.href.startsWith('/') ? (
+                      <Link 
+                        to={link.href}
+                        className="text-muted-foreground hover:text-primary transition-colors duration-300"
+                      >
+                        {link.label}
+                      </Link>
+                    ) : link.href.startsWith('#') ? (
+                      <a 
+                        href={link.href}
+                        className="text-muted-foreground hover:text-primary transition-colors duration-300"
+                        onClick={(e) => {
+                          if (link.href !== '#') {
+                            e.preventDefault();
+                            const element = document.getElementById(link.href.slice(1));
+                            if (element) {
+                              element.scrollIntoView({ behavior: 'smooth' });
+                            }
+                          }
+                        }}
+                      >
+                        {link.label}
+                      </a>
+                    ) : (
+                      <a 
+                        href={link.href}
+                        className="text-muted-foreground hover:text-primary transition-colors duration-300"
+                      >
+                        {link.label}
+                      </a>
+                    )}
                   </li>
                 ))}
               </ul>

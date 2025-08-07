@@ -1,7 +1,9 @@
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CheckCircle2, Copy } from "lucide-react";
+import { CheckCircle2, Copy, ExternalLink } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface MintSuccessProps {
   referralLink: string;
@@ -51,6 +53,18 @@ const MintSuccess = ({ referralLink, userNFTBalance, onCopyReferralLink }: MintS
         </div>
         <p className="text-xs text-muted-foreground mt-2">
           Share this link to earn $1 for each new partner you refer!
+        </p>
+      </div>
+
+      <div className="space-y-3">
+        <Link to="/dashboard">
+          <Button className="btn-glow-primary w-full">
+            <ExternalLink className="h-4 w-4 mr-2" />
+            Open Dashboard
+          </Button>
+        </Link>
+        <p className="text-xs text-muted-foreground">
+          Track your referrals, earnings, and achievements in your personal dashboard
         </p>
       </div>
     </div>
