@@ -1,3 +1,4 @@
+
 import { ReactNode } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
@@ -7,15 +8,15 @@ import BackToTop from "../ui/back-to-top";
 
 interface LayoutProps {
   children: ReactNode;
-  onNavigate: (section: string) => void;
+  onNavigate?: (section: string) => void; // Keep for backward compatibility
 }
 
-const Layout = ({ children, onNavigate }: LayoutProps) => {
+const Layout = ({ children }: LayoutProps) => {
   return (
     <div className="min-h-screen bg-background">
       <ScrollIndicator />
-      <Header onNavigate={onNavigate} />
-      <BreadcrumbNav onNavigate={onNavigate} />
+      <Header />
+      <BreadcrumbNav onNavigate={() => {}} />
       <BackToTop />
       <main className="pt-16"> {/* Account for fixed header */}
         {children}
