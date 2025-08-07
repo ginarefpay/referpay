@@ -2,7 +2,7 @@
 import { Card } from "@/components/ui/card";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import WalletConnect from "./WalletConnect";
-import LiveDataDashboard from "./LiveDataDashboard";
+import EnhancedPartnerDashboard from "./EnhancedPartnerDashboard";
 import ParticipationForm from "./ParticipationForm";
 import NFTDisplay from "./NFTDisplay";
 import ContractStats from "./ContractStats";
@@ -40,10 +40,10 @@ const SmartDAppSection = () => {
       );
     }
     
-    // Show partner dashboard for partners
+    // Show enhanced partner dashboard for partners
     if (userState === 'partner') {
       return (
-        <LiveDataDashboard
+        <EnhancedPartnerDashboard
           walletAddress={connectedWallet}
           contractInfo={contractInfo}
           walletBalances={walletBalances}
@@ -73,25 +73,25 @@ const SmartDAppSection = () => {
 
   return (
     <section className="py-24 px-6" id="dapp">
-      <div className="container mx-auto max-w-6xl">
+      <div className="container mx-auto max-w-7xl">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-8">
-            <span className="text-gradient-primary">Live Blockchain Data</span>
+            <span className="text-gradient-primary">Professional Partner Experience</span>
             <br />
-            <span className="text-gradient-gold">Real-Time Partner Experience</span>
+            <span className="text-gradient-gold">Live Data • AI Tools • Earning Opportunities</span>
           </h2>
           
           <ContractStats contractInfo={contractInfo} isLoading={isLoadingContract} />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
           {/* NFT Display - Always visible */}
           <div className="order-2 lg:order-1">
             <NFTDisplay />
           </div>
 
           {/* Smart Interface - Changes based on user state */}
-          <div className="order-1 lg:order-2 space-y-6">
+          <div className="order-1 lg:order-2 lg:col-span-2 space-y-6">
             <Card className="card-glow p-8">
               {isConnecting && (
                 <div className="text-center py-8">
