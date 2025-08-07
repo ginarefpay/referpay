@@ -1,7 +1,8 @@
+
 import HeroSection from "@/components/HeroSection";
 import VisionSection from "@/components/VisionSection";
 import ValueSection from "@/components/ValueSection";
-import DAppSection from "@/components/DAppSection";
+import SmartDAppSection from "@/components/dapp/SmartDAppSection";
 import AboutSection from "@/components/sections/AboutSection";
 import HowItWorksSection from "@/components/sections/HowItWorksSection";
 import ProblemSection from "@/components/sections/ProblemSection";
@@ -52,7 +53,7 @@ const Index = () => {
         <ValueSection />
       </section>
       <section id="dapp">
-        <DAppSection />
+        <SmartDAppSection />
       </section>
     </Layout>
   );

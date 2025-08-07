@@ -10,3 +10,4 @@ export * from './enhanced-contracts';
 export * from './errors';
 export * from './retry';
 export * from './transaction';
+export * from './partner-utils';
