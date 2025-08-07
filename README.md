@@ -29,7 +29,7 @@ This repository contains the source code for a smart contract protocol deployed 
 To run the frontend application on your local machine for development or testing:
 
 1.  **Clone the repo:** ```sh 
-    git clone [https://github.com/ginarefpay/referpay.git](https://github.com/ginarefpay/referpay.git)
+    git clone [https://github.com/ginarefpay/referpay.git](https://github.com/ginarefpay/referpayorg.git)
     ``` 
 
 2.  **Navigate to the directory:** ```sh 
