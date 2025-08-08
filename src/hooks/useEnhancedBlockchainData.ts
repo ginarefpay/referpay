@@ -77,7 +77,7 @@ export const useEnhancedBlockchainData = () => {
       totalEarnings: 0,
       earningsHistory: [],
       lastUpdated: new Date(),
-      verificationMethod: 'blockchain'
+      verificationMethod: 'blockchain_analysis'
     },
     referrerAddress: '',
     referralLink: '',
