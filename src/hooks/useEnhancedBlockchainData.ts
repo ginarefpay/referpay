@@ -76,7 +76,8 @@ export const useEnhancedBlockchainData = () => {
       totalReferrals: 0,
       totalEarnings: 0,
       earningsHistory: [],
-      lastUpdated: new Date()
+      lastUpdated: new Date(),
+      verificationMethod: 'blockchain'
     },
     referrerAddress: '',
     referralLink: '',
