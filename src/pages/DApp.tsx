@@ -118,7 +118,7 @@ const DApp = () => {
     // Show wallet connect if not connected
     if (!connectedWallet) {
       return (
-        <div className="min-h-screen pt-16 bg-gradient-to-br from-background via-card/50 to-background flex items-center justify-center">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-card/50 to-background">
           <div className="container mx-auto px-6 max-w-md">
             <WalletConnect onConnect={handleConnectWallet} />
           </div>
@@ -129,7 +129,7 @@ const DApp = () => {
     // Show loading while checking user status
     if (userState === 'checking' || isLoadingUser) {
       return (
-        <div className="min-h-screen pt-16 bg-gradient-to-br from-background via-card/50 to-background flex items-center justify-center">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-card/50 to-background">
           <div className="text-center">
             <LoadingSpinner size="lg" text="Loading your blockchain data..." />
             <p className="mt-4 text-muted-foreground">
@@ -143,16 +143,19 @@ const DApp = () => {
     // Show participation form for new users
     if (userState === 'new_user') {
       return (
-        <div className="min-h-screen pt-16 bg-gradient-to-br from-background via-card/50 to-background">
+        <div className="min-h-screen bg-gradient-to-br from-background via-card/50 to-background">
           <div className="container mx-auto px-6 py-8 max-w-4xl">
-            <ParticipationForm
-              connectedWallet={connectedWallet}
-              referrerAddress={referrerAddress}
-              setReferrerAddress={actions.setReferrerAddress}
-              contractInfo={contractInfo}
-              isProcessing={isProcessing}
-              onParticipate={handleParticipate}
-            />
+            <div className="pt-16">
+              {renderNetworkWarning()}
+              <ParticipationForm
+                connectedWallet={connectedWallet}
+                referrerAddress={referrerAddress}
+                setReferrerAddress={actions.setReferrerAddress}
+                contractInfo={contractInfo}
+                isProcessing={isProcessing}
+                onParticipate={handleParticipate}
+              />
+            </div>
           </div>
         </div>
       );
@@ -161,28 +164,30 @@ const DApp = () => {
     // Show enhanced partner dashboard for verified partners
     if (userState === 'partner') {
       return (
-        <div className="min-h-screen pt-16 bg-gradient-to-br from-background via-card/50 to-background">
+        <div className="min-h-screen bg-gradient-to-br from-background via-card/50 to-background">
           <div className="container mx-auto px-6 py-8 max-w-7xl">
-            <div className="text-center mb-8">
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                <span className="text-gradient-primary">ReferPay</span>
-                <span className="text-gradient-gold"> Professional Dashboard</span>
-              </h1>
-              <p className="text-lg text-muted-foreground">
-                Real-time blockchain data • Verified earnings • Professional partnership management
-              </p>
+            <div className="pt-16">
+              <div className="text-center mb-8">
+                <h1 className="text-4xl md:text-5xl font-bold mb-4">
+                  <span className="text-gradient-primary">ReferPay</span>
+                  <span className="text-gradient-gold"> Professional Dashboard</span>
+                </h1>
+                <p className="text-lg text-muted-foreground">
+                  Real-time blockchain data • Verified earnings • Professional partnership management
+                </p>
+              </div>
+
+              {renderNetworkWarning()}
+
+              <EnhancedPartnerDashboard
+                walletAddress={connectedWallet}
+                contractInfo={contractInfo}
+                walletBalances={walletBalances}
+                partnerVerification={partnerVerification}
+                referralStats={referralStats}
+                referralLink={referralLink}
+              />
             </div>
-
-            {renderNetworkWarning()}
-
-            <EnhancedPartnerDashboard
-              walletAddress={connectedWallet}
-              contractInfo={contractInfo}
-              walletBalances={walletBalances}
-              partnerVerification={partnerVerification}
-              referralStats={referralStats}
-              referralLink={referralLink}
-            />
           </div>
         </div>
       );
@@ -190,7 +195,7 @@ const DApp = () => {
 
     // Fallback
     return (
-      <div className="min-h-screen pt-16 bg-gradient-to-br from-background via-card/50 to-background flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-card/50 to-background">
         <div className="container mx-auto px-6 max-w-md">
           <WalletConnect onConnect={handleConnectWallet} />
         </div>
