@@ -1,3 +1,4 @@
+
 // Contract Configuration
 export const CONTRACT_ADDRESS = '0x19C1d81A794411a85666754839B865cBFb61f724';
 export const USDC_CONTRACT_ADDRESS = '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359'; // Poligon Man USDC
@@ -214,6 +215,25 @@ export const USDC_ABI = [
       }
     ],
     "name": "allowance",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      }
+    ],
+    "name": "balanceOf",
     "outputs": [
       {
         "internalType": "uint256",

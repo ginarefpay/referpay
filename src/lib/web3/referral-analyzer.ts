@@ -1,6 +1,6 @@
 
 import { ethers } from 'ethers';
-import { USDC_CONTRACT_ADDRESS } from './config';
+import { USDC_CONTRACT_ADDRESS, CONTRACT_ADDRESS } from './config';
 import { getProvider } from './wallet';
 
 export interface ReferralTransaction {
@@ -19,27 +19,30 @@ export interface ReferralStats {
 export const analyzeReferralEarnings = async (userAddress: string): Promise<ReferralStats> => {
   try {
     console.log('Analyzing referral earnings for:', userAddress);
+    console.log('Looking for USDC transfers FROM contract:', CONTRACT_ADDRESS, 'TO user:', userAddress);
     
     const provider = getProvider();
     
-    // Get recent blocks to analyze (last 1000 blocks as example)
+    // Get recent blocks to analyze (last 1000 blocks for performance)
     const currentBlock = await provider.getBlockNumber();
     const fromBlock = Math.max(0, currentBlock - 1000);
     
-    // Create filter for USDC transfers TO the user address
+    console.log(`Analyzing blocks ${fromBlock} to ${currentBlock}`);
+    
+    // Create filter for USDC transfers FROM the main contract TO the user address
     const transferFilter = {
       address: USDC_CONTRACT_ADDRESS,
       topics: [
         ethers.id("Transfer(address,address,uint256)"),
-        null, // from (any address)
-        ethers.zeroPadValue(userAddress, 32) // to (user address)
+        ethers.zeroPadValue(CONTRACT_ADDRESS.toLowerCase(), 32), // from (main contract only)
+        ethers.zeroPadValue(userAddress.toLowerCase(), 32) // to (user address)
       ],
       fromBlock,
       toBlock: currentBlock
     };
     
     const logs = await provider.getLogs(transferFilter);
-    console.log(`Found ${logs.length} USDC transfers to user`);
+    console.log(`Found ${logs.length} USDC transfers from contract to user`);
     
     const transactions: ReferralTransaction[] = [];
     let totalEarnings = 0;
@@ -56,31 +59,38 @@ export const analyzeReferralEarnings = async (userAddress: string): Promise<Refe
         
         const amount = Number(ethers.formatUnits(decoded.args.value, 6)); // USDC has 6 decimals
         
-        // Only count transfers that look like referral rewards (typically $1)
-        if (amount >= 0.9 && amount <= 1.1) {
-          const block = await provider.getBlock(log.blockNumber);
-          
-          transactions.push({
-            hash: log.transactionHash,
-            from: decoded.args.from,
-            amount,
-            timestamp: new Date(block!.timestamp * 1000)
-          });
-          
-          totalEarnings += amount;
-        }
+        // Get block timestamp
+        const block = await provider.getBlock(log.blockNumber);
+        
+        transactions.push({
+          hash: log.transactionHash,
+          from: decoded.args.from,
+          amount,
+          timestamp: new Date(block!.timestamp * 1000)
+        });
+        
+        totalEarnings += amount;
+        
+        console.log(`Found referral payment: $${amount} from ${decoded.args.from} on ${new Date(block!.timestamp * 1000).toLocaleDateString()}`);
       } catch (error) {
         console.error('Error parsing log:', error);
       }
     }
     
+    // Total referrals = count of transfers from main contract to user
+    // Each transfer represents one referral reward
     const stats: ReferralStats = {
       totalReferrals: transactions.length,
       totalEarnings,
-      recentTransactions: transactions.slice(-10) // Last 10 transactions
+      recentTransactions: transactions.slice(-10).reverse() // Last 10 transactions, most recent first
     };
     
-    console.log('Referral stats analyzed:', stats);
+    console.log('Final referral stats:', {
+      totalReferrals: stats.totalReferrals,
+      totalEarnings: stats.totalEarnings.toFixed(2),
+      recentCount: stats.recentTransactions.length
+    });
+    
     return stats;
   } catch (error) {
     console.error('Error analyzing referral earnings:', error);

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,6 +17,7 @@ import { useLiveBlockchainData } from "@/hooks/useLiveBlockchainData";
 import { usePolygonNetwork } from "@/hooks/usePolygonNetwork";
 import WalletConnect from "./WalletConnect";
 import LiveDataDashboard from "./LiveDataDashboard";
+import NFTDisplay from "./NFTDisplay";
 import EnhancedReferralList from "@/components/dashboard/EnhancedReferralList";
 import GinaAISuite from "./dashboard/GinaAISuite";
 import ParticipationForm from "./ParticipationForm";
@@ -173,13 +173,20 @@ const UnifiedDashboard = () => {
           </TabsList>
 
           <TabsContent value="overview">
-            <LiveDataDashboard
-              walletAddress={connectedWallet}
-              contractInfo={contractInfo}
-              walletBalances={walletBalances}
-              referralStats={referralStats}
-              referralLink={referralLink}
-            />
+            <div className="space-y-6">
+              {/* Add NFT Display for partners */}
+              <div className="flex justify-center mb-6">
+                <NFTDisplay />
+              </div>
+              
+              <LiveDataDashboard
+                walletAddress={connectedWallet}
+                contractInfo={contractInfo}
+                walletBalances={walletBalances}
+                referralStats={referralStats}
+                referralLink={referralLink}
+              />
+            </div>
           </TabsContent>
 
           <TabsContent value="referrals">
