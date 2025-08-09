@@ -16,15 +16,15 @@ export interface ReferralStats {
   recentTransactions: ReferralTransaction[];
 }
 
-// Configuration for blockchain scanning
+// Configuration optimized for user wallet scanning
 const SCAN_CONFIG = {
-  CHUNK_SIZE: 2000, // Blocks per chunk
-  MAX_BLOCKS_TO_SCAN: 50000, // Total blocks to scan back
-  START_BLOCK: 50000000, // Approximate block when contract was deployed
+  CHUNK_SIZE: 5000, // Larger chunks since we're scanning fewer transactions
+  MAX_BLOCKS_TO_SCAN: 100000, // Scan more blocks since user wallets have fewer transactions
+  REFERRAL_PAYMENT_AMOUNT: 1000000, // Exactly 1 USDC (6 decimals)
   CACHE_DURATION: 300000 // 5 minutes cache
 };
 
-// Cache for block timestamps and results
+// Cache for results and block timestamps
 const blockTimestampCache = new Map<number, number>();
 const resultsCache = new Map<string, { data: ReferralStats; timestamp: number }>();
 
@@ -48,9 +48,10 @@ const getBlockTimestamp = async (provider: ethers.Provider, blockNumber: number)
 };
 
 /**
- * Scan blockchain for USDC transfers from contract to user in chunks
+ * Scan user wallet for incoming USDC transfers from our contract
+ * This is much more efficient than scanning the entire USDC contract
  */
-const scanReferralTransfers = async (
+const scanUserWalletForReferrals = async (
   provider: ethers.Provider,
   userAddress: string,
   fromBlock: number,
@@ -58,9 +59,9 @@ const scanReferralTransfers = async (
 ): Promise<ReferralTransaction[]> => {
   const transactions: ReferralTransaction[] = [];
   
-  console.log(`Scanning blocks ${fromBlock} to ${toBlock} for USDC transfers`);
+  console.log(`Scanning user wallet ${userAddress.slice(0, 8)}... for USDC transfers from blocks ${fromBlock} to ${toBlock}`);
   
-  // Create the Transfer event filter
+  // Create filter for USDC Transfer events TO the user wallet FROM our contract
   const transferEventSignature = ethers.id("Transfer(address,address,uint256)");
   const contractAddressTopic = ethers.zeroPadValue(CONTRACT_ADDRESS.toLowerCase(), 32);
   const userAddressTopic = ethers.zeroPadValue(userAddress.toLowerCase(), 32);
@@ -91,10 +92,18 @@ const scanReferralTransfers = async (
         const decoded = iface.parseLog(log);
         if (!decoded) continue;
         
-        // Convert amount from USDC (6 decimals) to readable number
-        const amount = Number(ethers.formatUnits(decoded.args.value, 6));
+        // Convert amount from USDC raw value (6 decimals)
+        const rawAmount = decoded.args.value;
         
-        // Get block timestamp (with caching)
+        // Only count transactions that are exactly 1 USDC (referral payments)
+        if (rawAmount.toString() !== SCAN_CONFIG.REFERRAL_PAYMENT_AMOUNT.toString()) {
+          console.log(`Skipping transaction with amount ${rawAmount} (not a referral payment)`);
+          continue;
+        }
+        
+        const amount = Number(ethers.formatUnits(rawAmount, 6));
+        
+        // Get block timestamp
         const timestamp = await getBlockTimestamp(provider, log.blockNumber);
         
         transactions.push({
@@ -104,51 +113,50 @@ const scanReferralTransfers = async (
           timestamp: new Date(timestamp * 1000)
         });
         
-        console.log(`Referral payment: $${amount} USDC at block ${log.blockNumber} (${new Date(timestamp * 1000).toLocaleDateString()})`);
+        console.log(`✅ Referral payment found: $${amount} USDC at block ${log.blockNumber} (TX: ${log.transactionHash})`);
       } catch (decodeError) {
         console.warn('Failed to decode transfer log:', decodeError);
       }
     }
   } catch (error) {
-    console.error(`Error scanning blocks ${fromBlock}-${toBlock}:`, error);
+    console.error(`Error scanning user wallet blocks ${fromBlock}-${toBlock}:`, error);
   }
   
   return transactions;
 };
 
 /**
- * Main function to analyze referral earnings from blockchain
+ * Analyze referral earnings by scanning user wallet for incoming USDC transfers
+ * This approach is much faster than scanning the entire USDC contract
  */
 export const analyzeReferralEarnings = async (userAddress: string): Promise<ReferralStats> => {
   // Check cache first
-  const cacheKey = `referrals_${userAddress.toLowerCase()}`;
+  const cacheKey = `user_referrals_${userAddress.toLowerCase()}`;
   const cached = resultsCache.get(cacheKey);
   
   if (cached && (Date.now() - cached.timestamp) < SCAN_CONFIG.CACHE_DURATION) {
-    console.log('Returning cached referral stats');
+    console.log('✅ Returning cached referral stats for user');
     return cached.data;
   }
   
   try {
-    console.log('=== ANALYZING REFERRAL EARNINGS ===');
+    console.log('=== ANALYZING USER WALLET REFERRAL EARNINGS ===');
     console.log('User address:', userAddress);
     console.log('Contract address:', CONTRACT_ADDRESS);
     console.log('USDC contract:', USDC_CONTRACT_ADDRESS);
+    console.log('Target referral amount: $1 USDC');
     
     const provider = getReadProvider();
     const currentBlock = await provider.getBlockNumber();
     
     console.log('Current block:', currentBlock);
     
-    // Determine scan range
-    const scanFromBlock = Math.max(
-      SCAN_CONFIG.START_BLOCK,
-      currentBlock - SCAN_CONFIG.MAX_BLOCKS_TO_SCAN
-    );
+    // Determine scan range - scan more blocks since user wallets have fewer transactions
+    const scanFromBlock = Math.max(1, currentBlock - SCAN_CONFIG.MAX_BLOCKS_TO_SCAN);
     
-    console.log(`Scanning from block ${scanFromBlock} to ${currentBlock} (${currentBlock - scanFromBlock} blocks)`);
+    console.log(`Scanning user wallet from block ${scanFromBlock} to ${currentBlock} (${currentBlock - scanFromBlock} blocks)`);
     
-    // Scan in chunks to avoid RPC limits
+    // Scan in chunks
     const allTransactions: ReferralTransaction[] = [];
     const chunkSize = SCAN_CONFIG.CHUNK_SIZE;
     
@@ -156,7 +164,7 @@ export const analyzeReferralEarnings = async (userAddress: string): Promise<Refe
       const toBlock = Math.min(fromBlock + chunkSize - 1, currentBlock);
       
       try {
-        const chunkTransactions = await scanReferralTransfers(
+        const chunkTransactions = await scanUserWalletForReferrals(
           provider,
           userAddress,
           fromBlock,
@@ -165,9 +173,9 @@ export const analyzeReferralEarnings = async (userAddress: string): Promise<Refe
         allTransactions.push(...chunkTransactions);
         
         // Small delay to avoid overwhelming the RPC
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 50));
       } catch (chunkError) {
-        console.error(`Failed to scan chunk ${fromBlock}-${toBlock}:`, chunkError);
+        console.error(`Failed to scan user wallet chunk ${fromBlock}-${toBlock}:`, chunkError);
         continue;
       }
     }
@@ -182,13 +190,13 @@ export const analyzeReferralEarnings = async (userAddress: string): Promise<Refe
     const stats: ReferralStats = {
       totalReferrals,
       totalEarnings,
-      recentTransactions: allTransactions.slice(0, 10) // Last 10 transactions
+      recentTransactions: allTransactions.slice(0, 20) // Show more recent transactions
     };
     
-    console.log('=== REFERRAL ANALYSIS COMPLETE ===');
-    console.log(`Total referrals found: ${totalReferrals}`);
-    console.log(`Total earnings: $${totalEarnings.toFixed(2)} USDC`);
-    console.log(`Recent transactions: ${stats.recentTransactions.length}`);
+    console.log('=== USER WALLET REFERRAL ANALYSIS COMPLETE ===');
+    console.log(`✅ Total referrals found: ${totalReferrals}`);
+    console.log(`💰 Total earnings: $${totalEarnings.toFixed(2)} USDC`);
+    console.log(`📋 Recent transactions: ${stats.recentTransactions.length}`);
     
     // Cache the results
     resultsCache.set(cacheKey, {
@@ -199,7 +207,7 @@ export const analyzeReferralEarnings = async (userAddress: string): Promise<Refe
     return stats;
     
   } catch (error) {
-    console.error('=== REFERRAL ANALYSIS FAILED ===');
+    console.error('=== USER WALLET REFERRAL ANALYSIS FAILED ===');
     console.error('Error details:', error);
     
     // Return empty stats on error
@@ -214,14 +222,27 @@ export const analyzeReferralEarnings = async (userAddress: string): Promise<Refe
 };
 
 /**
- * Clear caches (useful for manual refresh)
+ * Clear caches for manual refresh
  */
 export const clearReferralCache = (userAddress?: string) => {
   if (userAddress) {
-    const cacheKey = `referrals_${userAddress.toLowerCase()}`;
+    const cacheKey = `user_referrals_${userAddress.toLowerCase()}`;
     resultsCache.delete(cacheKey);
+    console.log(`🗑️ Cleared cache for user: ${userAddress}`);
   } else {
     resultsCache.clear();
     blockTimestampCache.clear();
+    console.log('🗑️ Cleared all referral caches');
   }
+};
+
+/**
+ * Get cache status for debugging
+ */
+export const getCacheInfo = () => {
+  return {
+    resultsCacheSize: resultsCache.size,
+    blockCacheSize: blockTimestampCache.size,
+    cachedUsers: Array.from(resultsCache.keys())
+  };
 };
